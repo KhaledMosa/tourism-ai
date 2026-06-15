@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Egypt Tourism AI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body {
+    background: #0a0705;
+    color: #e8d5a3;
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at top, #1a0f00 0%, #0a0705 60%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid #3d2b00;
+  }
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem;
+    color: #c9a84c;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px #c9a84c55;
+  }
+  header p { color: #8a7355; font-size: 0.9rem; margin-top: 6px; letter-spacing: 2px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 30px 20px; max-width: 700px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* ── SCAN SCREEN ── */
+  #scan-box {
+    border: 2px solid #3d2b00;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #110d06;
+    padding: 20px;
+    text-align: center;
+  }
+  #scan-box h2 {
+    font-family: 'Cinzel', serif;
+    color: #c9a84c;
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+  }
+  #reader { width: 100%; border-radius: 10px; overflow: hidden; }
+
+  .divider {
+    text-align: center;
+    margin: 24px 0;
+    color: #3d2b00;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+  }
+
+  .demo-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #3d2b00, #1a1200);
+    border: 1px solid #c9a84c44;
+    border-radius: 10px;
+    color: #c9a84c;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    margin-bottom: 10px;
+  }
+  .demo-btn:hover { background: linear-gradient(135deg, #5a4000, #2a1e00); border-color: #c9a84c; }
+
+  /* ── CHARACTER SCREEN ── */
+  #character-screen { animation: fadeIn 0.8s ease; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .site-badge {
+    display: inline-block;
+    background: #1a1200;
+    border: 1px solid #c9a84c44;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    color: #8a7355;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .character-card {
+    background: linear-gradient(160deg, #1a1200 0%, #0f0900 100%);
+    border: 1px solid #c9a84c33;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .character-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, #c9a84c08 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .character-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px solid #c9a84c;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    background: #1a1200;
+    box-shadow: 0 0 30px #c9a84c33;
+  }
+
+  .character-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    color: #c9a84c;
+    text-align: center;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+  }
+  .character-title {
+    text-align: center;
+    color: #8a7355;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  .greeting-box {
+    background: #0f0900;
+    border-left: 3px solid #c9a84c;
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #d4b87a;
+    font-style: italic;
+    min-height: 60px;
+  }
+
+  .loading-dots::after {
+    content: '...';
+    animation: dots 1.2s infinite;
+  }
+  @keyframes dots {
+    0%,20%{content:'.'} 40%,60%{content:'..'} 80%,100%{content:'...'}
+  }
+
+  /* ── SITE INFO ── */
+  .site-info {
+    background: #110d06;
+    border: 1px solid #3d2b00;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .info-item label {
+    display: block;
+    font-size: 0.7rem;
+    color: #8a7355;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .info-item span {
+    font-family: 'Cinzel', serif;
+    color: #c9a84c;
+    font-size: 0.9rem;
+  }
+
+  /* ── CHAT ── */
+  .chat-section h3 {
+    font-family: 'Cinzel', serif;
+    color: #c9a84c;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  #chat-messages {
+    background: #0a0705;
+    border: 1px solid #3d2b00;
+    border-radius: 14px;
+    padding: 16px;
+    height: 280px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #chat-messages::-webkit-scrollbar { width: 4px; }
+  #chat-messages::-webkit-scrollbar-track { background: #0a0705; }
+  #chat-messages::-webkit-scrollbar-thumb { background: #3d2b00; border-radius: 4px; }
+
+  .msg {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease;
+  }
+  .msg.user {
+    background: #1e1600;
+    border: 1px solid #3d2b00;
+    align-self: flex-end;
+    color: #e8d5a3;
+    border-radius: 14px 14px 4px 14px;
+  }
+  .msg.ai {
+    background: #150f00;
+    border: 1px solid #c9a84c22;
+    align-self: flex-start;
+    color: #d4b87a;
+    font-style: italic;
+    border-radius: 14px 14px 14px 4px;
+  }
+  .msg.ai .sender {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: #c9a84c;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    font-style: normal;
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 10px;
+  }
+  #chat-input {
+    flex: 1;
+    background: #110d06;
+    border: 1px solid #3d2b00;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #e8d5a3;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  #chat-input:focus { border-color: #c9a84c55; }
+  #chat-input::placeholder { color: #3d2b00; }
+
+  #send-btn {
+    background: linear-gradient(135deg, #c9a84c, #8a6a1a);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: #0a0705;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.3s;
+  }
+  #send-btn:hover { opacity: 0.85; }
+  #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #8a7355;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.3s;
+  }
+  .back-btn:hover { color: #c9a84c; }
+
+  /* ── DECORATIVE ── */
+  .hieroglyph {
+    text-align: center;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    letter-spacing: 8px;
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>𓂀 EGYPT TOURISM AI</h1>
+  <p>SCAN · DISCOVER · EXPERIENCE</p>
+</header>
+
+<!-- SCAN SCREEN -->
+<div class="screen active" id="screen-scan">
+  <div style="padding:30px 20px;max-width:500px;margin:0 auto;">
+    <div id="scan-box">
+      <h2>𓋹 SCAN YOUR QR CODE</h2>
+      <p style="color:#8a7355;font-size:0.85rem;margin-bottom:16px;letter-spacing:1px;">Point your camera at the exhibit QR code</p>
+      <div id="reader"></div>
+    </div>
+
+    <div class="divider">— OR CHOOSE AN EXHIBIT —</div>
+
+    <button class="demo-btn" onclick="loadSite('SITE003','T003')">
+      𓁦 TUTANKHAMUN — Golden Mask
+    </button>
+    <button class="demo-btn" onclick="loadSite('SITE001','T002')">
+      𓇳 GREAT PYRAMID — Giza
+    </button>
+    <button class="demo-btn" onclick="loadSite('SITE002','T002')">
+      𓊽 KARNAK TEMPLE — Luxor
+    </button>
+  </div>
+</div>
+
+<!-- CHARACTER SCREEN -->
+<div class="screen" id="screen-character">
+  <div style="max-width:700px;margin:0 auto;">
+    <button class="back-btn" onclick="goBack()">← BACK TO SCAN</button>
+
+    <div class="site-badge" id="site-badge">📍 Loading...</div>
+
+    <div class="character-card">
+      <div class="character-avatar" id="char-avatar">𓁦</div>
+      <div class="character-name" id="char-name">Loading...</div>
+      <div class="character-title" id="char-title">Ancient Egyptian Guide</div>
+      <div class="hieroglyph">𓂀 𓋹 𓊽 𓇳</div>
+      <div class="greeting-box" id="greeting-text">
+        <span class="loading-dots">Awakening from eternity</span>
+      </div>
+    </div>
+
+    <div class="site-info" id="site-info"></div>
+
+    <div class="chat-section">
+      <h3>𓂋 ASK THE ANCIENTS</h3>
+      <div id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Ask Tutankhamun anything..." onkeydown="if(event.key==='Enter')sendMessage()"/>
+        <button id="send-btn" onclick="sendMessage()">SEND</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── STATE ──
+  let currentTouristId = 'T003';
+  let currentSiteId = 'SITE003';
+  let currentCharacter = '';
+  let chatHistory = [];
+  let qrScanner = null;
+
+  // ── CHARACTER CONFIG ──
+  const CHARACTERS = {
+    'Tutankhamun': { emoji: '𓁦', title: 'The Boy King — 18th Dynasty' },
+    'Thoth':       { emoji: '𓅃', title: 'God of Wisdom & Writing' },
+    'Nefertari':   { emoji: '𓁹', title: 'Beloved Queen of Ramesses II' },
+  };
+
+  // ── QR SCANNER ──
+  function startScanner() {
+    qrScanner = new Html5Qrcode("reader");
+    qrScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => {
+        // QR format: "TOURIST_ID:SITE_ID"  e.g. "T003:SITE003"
+        const parts = decodedText.split(':');
+        if (parts.length === 2) {
+          qrScanner.stop();
+          loadSite(parts[1], parts[0]);
+        }
+      },
+      () => {}
+    ).catch(() => {});
+  }
+
+  // ── LOAD SITE ──
+  async function loadSite(siteId, touristId) {
+    currentSiteId = siteId;
+    currentTouristId = touristId;
+    chatHistory = [];
+
+    showScreen('screen-character');
+
+    document.getElementById('greeting-text').innerHTML = '<span class="loading-dots">Awakening from eternity</span>';
+    document.getElementById('char-name').textContent = '...';
+    document.getElementById('chat-messages').innerHTML = '';
+
+    try {
+      const res = await fetch(`/api/scan/${touristId}/${siteId}`);
+      const data = await res.json();
+
+      currentCharacter = data.character;
+      const cfg = CHARACTERS[currentCharacter] || { emoji: '𓂀', title: 'Ancient Egyptian Guide' };
+
+      document.getElementById('char-avatar').textContent = cfg.emoji;
+      document.getElementById('char-name').textContent = currentCharacter.toUpperCase();
+      document.getElementById('char-title').textContent = cfg.title;
+      document.getElementById('site-badge').textContent = '📍 ' + data.site.name;
+      document.getElementById('greeting-text').textContent = data.ai_greeting;
+      document.getElementById('chat-input').placeholder = `Ask ${currentCharacter} anything...`;
+
+      document.getElementById('site-info').innerHTML = `
+        <div class="info-item"><label>LOCATION</label><span>${data.site.location}</span></div>
+        <div class="info-item"><label>ERA</label><span>${data.site.era}</span></div>
+        <div class="info-item"><label>CHARACTER</label><span>${data.character}</span></div>
+        <div class="info-item"><label>VISITOR</label><span>${data.tourist.name}</span></div>
+      `;
+
+      addMessage('ai', data.ai_greeting);
+
+    } catch(e) {
+      document.getElementById('greeting-text').textContent = 'The spirits are silent... please try again.';
+    }
+  }
+
+  // ── CHAT ──
+  async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    input.value = '';
+    addMessage('user', msg);
+    chatHistory.push({ role: 'user', content: msg });
+
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    const typingEl = addMessage('ai', '...', true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tourist_id: currentTouristId,
+          site_id: currentSiteId,
+          message: msg,
+          history: chatHistory
+        })
+      });
+      const data = await res.json();
+
+      typingEl.querySelector('.msg-text').textContent = data.reply;
+      chatHistory.push({ role: 'assistant', content: data.reply });
+
+    } catch(e) {
+      typingEl.querySelector('.msg-text').textContent = 'The ancient spirits could not be reached...';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'SEND';
+    scrollChat();
+  }
+
+  function addMessage(role, text, isTyping=false) {
+    const box = document.getElementById('chat-messages');
+    const el = document.createElement('div');
+    el.className = `msg ${role}`;
+    if (role === 'ai') {
+      el.innerHTML = `<div class="sender">${currentCharacter || 'GUIDE'}</div><div class="msg-text">${isTyping ? '<span class="loading-dots"></span>' : text}</div>`;
+    } else {
+      el.innerHTML = `<div class="msg-text">${text}</div>`;
+    }
+    box.appendChild(el);
+    scrollChat();
+    return el;
+  }
+
+  function scrollChat() {
+    const box = document.getElementById('chat-messages');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // ── NAVIGATION ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goBack() {
+    showScreen('screen-scan');
+    chatHistory = [];
+  }
+
+  // ── INIT ──
+  startScanner();
+</script>
+</body>
+</html>
