@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KMT AI — Egypt Tourism</title>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap');
@@ -25,112 +25,153 @@
       --text-muted: #8c8070;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 50% -20%, #1c130b 0%, var(--bg-deep) 70%); }
-    .scan-lines { position: fixed; inset: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%; z-index: 999; pointer-events: none; opacity: 0.4; }
+    .scan-lines { position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%); background-size: 100% 4px; z-index: 999; pointer-events: none; opacity: 0.3; }
 
-    body::before { content: "𓁦 𓋹 𓇳 𓅓 𓆓 𓁴 𓉔 𓎛 𓏏 𓏤 𓌻 𓎡 𓏲 𓇾"; position: fixed; bottom: 5%; right: -5%; font-size: 12rem; color: rgba(197, 160, 68, 0.015); pointer-events: none; user-select: none; transform: rotate(-15deg); z-index: 0; width: 50%; word-break: break-all; }
+    header { text-align: center; padding: 40px 20px 25px; border-bottom: 1px solid var(--border-color); }
+    header::after { content: ''; display: block; width: 150px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); margin: 0 auto; margin-top: -1px; }
+    .brand-logo { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 7px; color: var(--gold-main); margin-bottom: 12px; font-weight: 700; }
+    header h1 { font-family: 'Cinzel', serif; font-size: 2.1rem; font-weight: 900; letter-spacing: 4px; background: linear-gradient(180deg, #fff 30%, var(--gold-light) 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 3px; margin-top: 8px; }
 
-    header { text-align: center; padding: 50px 20px 30px; position: relative; border-bottom: 1px solid var(--border-color); background: linear-gradient(to bottom, rgba(14,10,7,0.6), transparent); }
-    header::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 150px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); }
-    .brand-logo { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 7px; color: var(--gold-main); margin-bottom: 12px; font-weight: 700; text-shadow: 0 0 10px var(--gold-glow); }
-    header h1 { font-family: 'Cinzel', serif; font-size: 2.3rem; font-weight: 900; letter-spacing: 4px; color: #fff; background: linear-gradient(180deg, #fff 30%, var(--gold-light) 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    header p { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 3px; margin-top: 8px; text-transform: uppercase; }
-
-    .screen { display: none; padding: 25px 20px; max-width: 680px; margin: 0 auto; position: relative; z-index: 10; }
-    .screen.active { display: block; animation: fadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+    .screen { display: none; padding: 25px 20px; max-width: 680px; margin: 0 auto; }
+    .screen.active { display: block; animation: fadeIn 0.5s ease both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-    .scanner-wrapper { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; }
+    /* ── LANGUAGE SCREEN ── */
+    .lang-screen-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 20px; }
+    .lang-title { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--gold-light); letter-spacing: 3px; text-align: center; margin-bottom: 10px; }
+    .lang-subtitle { color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px; text-align: center; margin-bottom: 30px; }
+    .lang-btn { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 340px; padding: 22px 30px; background: linear-gradient(135deg, #0e0a07, #17110c); border: 1px solid var(--border-color); border-radius: 18px; cursor: pointer; transition: all 0.3s; }
+    .lang-btn:hover { border-color: var(--gold-main); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(197,160,68,0.15); }
+    .lang-btn .lang-flag { font-size: 2.2rem; }
+    .lang-btn .lang-info { text-align: left; }
+    .lang-btn .lang-name { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold-main); letter-spacing: 2px; display: block; }
+    .lang-btn .lang-sub { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; display: block; margin-top: 3px; }
+    .lang-divider { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 4px; }
+
+    /* ── SCAN SCREEN ── */
+    .scanner-wrapper { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     .scanner-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); }
-    .scanner-inner-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold-light); text-align: center; margin-bottom: 20px; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    #reader { width: 100%; border: 1px solid var(--border-color) !important; border-radius: 16px; overflow: hidden; background: #000; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
-    #reader__dashboard, #reader__header { display: none !important; }
-    #reader video { border-radius: 16px; object-fit: cover; }
-    
-    .divider { text-align: center; margin: 35px 0; position: relative; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; }
-    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 25%; height: 1px; background: var(--border-color); }
+    .scanner-inner-title { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold-light); text-align: center; margin-bottom: 18px; letter-spacing: 2px; }
+    #reader { width: 100%; border-radius: 14px; overflow: hidden; background: #000; }
+    #reader video { border-radius: 14px; }
+
+    .divider { text-align: center; margin: 30px 0; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 4px; position: relative; }
+    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 28%; height: 1px; background: var(--border-color); }
     .divider::before { left: 0; } .divider::after { right: 0; }
 
-    .exhibit-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 18px 24px; background: linear-gradient(135deg, #0e0a07 0%, #17110c 100%); border: 1px solid var(--border-color); border-radius: 16px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-bottom: 14px; position: relative; letter-spacing: 1px; }
+    .exhibit-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 18px 24px; background: linear-gradient(135deg, #0e0a07, #17110c); border: 1px solid var(--border-color); border-radius: 16px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; margin-bottom: 14px; }
     .exhibit-btn::after { content: '𓋹'; font-size: 1.2rem; color: var(--text-muted); transition: all 0.3s; opacity: 0.5; }
-    .exhibit-btn:hover { border-color: var(--gold-main); background: linear-gradient(135deg, #140f0a 0%, #1f170f 100%); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(197,160,68,0.1); }
-    .exhibit-btn:hover::after { color: var(--gold-light); opacity: 1; transform: scale(1.1) rotate(15deg); }
+    .exhibit-btn:hover { border-color: var(--gold-main); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(197,160,68,0.1); }
+    .exhibit-btn:hover::after { color: var(--gold-light); opacity: 1; }
     .exhibit-btn .btn-meta { display: flex; flex-direction: column; gap: 4px; text-align: left; }
     .exhibit-btn .btn-meta span:first-child { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold-main); font-weight: 700; }
     .exhibit-btn .btn-meta span:last-child { font-size: 0.75rem; color: var(--text-muted); }
 
-    .back-btn { background: none; border: none; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; transition: color 0.3s; text-transform: uppercase; }
+    /* ── CHARACTER SCREEN ── */
+    .back-btn { background: none; border: none; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; transition: color 0.3s; }
     .back-btn:hover { color: var(--gold-light); }
-    .site-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(197, 160, 68, 0.06); border: 1px solid rgba(197, 160, 68, 0.2); padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; color: var(--gold-light); letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .site-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(197,160,68,0.06); border: 1px solid rgba(197,160,68,0.2); padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; color: var(--gold-light); letter-spacing: 1.5px; margin-bottom: 20px; }
     
-    .profile-card { background: linear-gradient(145deg, #0f0b08 0%, #060403 100%); border: 1px solid var(--border-color); border-radius: 28px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 24px; }
+    .profile-card { background: linear-gradient(145deg, #0f0b08, #060403); border: 1px solid var(--border-color); border-radius: 28px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 24px; }
     .profile-flex { display: flex; align-items: center; gap: 24px; margin-bottom: 20px; }
-    .avatar-frame { width: 84px; height: 84px; border-radius: 50%; background: #140f0b; border: 1px solid var(--gold-dark); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 0 25px var(--gold-glow); flex-shrink: 0; }
-    .avatar-frame span { font-size: 2.4rem; line-height: 1; }
+    .avatar-frame { width: 84px; height: 84px; border-radius: 50%; background: #140f0b; border: 1px solid var(--gold-dark); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px var(--gold-glow); flex-shrink: 0; }
+    .avatar-frame span { font-size: 2.4rem; }
     .profile-meta h2 { font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff; letter-spacing: 2px; }
-    .profile-meta p { font-size: 0.75rem; color: var(--gold-main); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+    .profile-meta p { font-size: 0.75rem; color: var(--gold-main); letter-spacing: 3px; margin-top: 4px; }
     
-    .interactive-speech-bubble { background: #14100b; border-radius: 20px; padding: 20px; position: relative; border: 1px solid var(--border-color); direction: rtl; }
-    .interactive-speech-bubble p { font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.7; color: #ebdcb9; font-style: italic; }
-    
-    .exhibit-info-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .info-block label { display: block; font-size: 0.7()rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-    .info-block p { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 600; letter-spacing: 1px; }
+    .speech-bubble { background: #14100b; border-radius: 20px; padding: 20px; border: 1px solid var(--border-color); }
+    .speech-bubble p { font-family: 'Playfair Display', serif; font-size: 1.1rem; line-height: 1.7; color: #ebdcb9; font-style: italic; }
 
-    .chat-container { background: linear-gradient(180deg, #0a0705 0%, #050302 100%); border: 1px solid var(--border-color); border-radius: 24px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+    .exhibit-info-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-block label { display: block; font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+    .info-block p { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 600; }
+
+    .chat-container { background: linear-gradient(180deg, #0a0705, #050302); border: 1px solid var(--border-color); border-radius: 24px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
     .chat-messages { height: 320px; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
     .chat-messages::-webkit-scrollbar { width: 5px; }
     .chat-messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-    .message { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; position: relative; }
-    .message.user { background: linear-gradient(135deg, #1c140c 0%, #140e08 100%); border: 1px solid var(--border-glow); align-self: flex-end; color: var(--text-main); border-bottom-right-radius: 4px; direction: rtl; text-align: right; }
-    .message.ai { background: linear-gradient(135deg, #0e0a07 0%, #080604 100%); border: 1px solid rgba(197,160,68,0.1); align-self: flex-start; color: #ebdcb9; border-bottom-left-radius: 4px; direction: rtl; text-align: right; }
-    .message .msg-speaker { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold-main); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; }
+    .message { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; }
+    .message.user { background: linear-gradient(135deg, #1c140c, #140e08); border: 1px solid var(--border-glow); align-self: flex-end; color: var(--text-main); border-bottom-right-radius: 4px; }
+    .message.ai { background: linear-gradient(135deg, #0e0a07, #080604); border: 1px solid rgba(197,160,68,0.1); align-self: flex-start; color: #ebdcb9; border-bottom-left-radius: 4px; }
+    .message .msg-speaker { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold-main); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
 
     .loading-dots { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; }
     .loading-dots span { width: 6px; height: 6px; background: var(--gold-main); border-radius: 50%; animation: dotPulse 1.4s infinite ease-in-out both; }
     .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
     .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
-    @keyframes dotPulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+    @keyframes dotPulse { 0%,80%,100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
     .chat-input-bar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #0e0a07; border-top: 1px solid var(--border-color); }
-    .input-wrapper { position: relative; flex: 1; }
-    #chat-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; outline: none; direction: rtl; text-align: right; }
-    
-    #send-btn { background: linear-gradient(135deg, var(--gold-main) 0%, var(--gold-dark) 100%); border: none; border-radius: 14px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--bg-deep); font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; }
+    #chat-input { flex: 1; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; outline: none; }
+    #send-btn { background: linear-gradient(135deg, var(--gold-main), var(--gold-dark)); border: none; border-radius: 14px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--bg-deep); font-size: 1.1rem; cursor: pointer; transition: all 0.3s; flex-shrink: 0; }
     #send-btn:hover { transform: scale(1.04); box-shadow: 0 0 20px var(--gold-glow); }
     #send-btn:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+
+    /* RTL support */
+    .rtl { direction: rtl; text-align: right; }
+    .rtl #chat-input { text-align: right; direction: rtl; }
   </style>
 </head>
 <body>
-
   <div class="scan-lines"></div>
 
   <header>
     <div class="brand-logo">𓁦 KMT METAVERSE 𓋹</div>
     <h1>EGYPT TOURISM AI</h1>
-    <p>The Past is Listening</p>
+    <p id="header-sub">THE PAST IS LISTENING</p>
   </header>
 
-  <div class="screen active" id="screen-scan">
+  <!-- ── SCREEN 1: LANGUAGE SELECTION ── -->
+  <div class="screen active" id="screen-lang">
+    <div class="lang-screen-inner">
+      <div>
+        <p class="lang-title">𓂀 CHOOSE YOUR LANGUAGE</p>
+        <p class="lang-subtitle">اختر لغتك · Select your language</p>
+      </div>
+
+      <button class="lang-btn" onclick="selectLanguage('en')">
+        <span class="lang-flag">🇬🇧</span>
+        <div class="lang-info">
+          <span class="lang-name">ENGLISH</span>
+          <span class="lang-sub">Speak with the ancients in English</span>
+        </div>
+      </button>
+
+      <div class="lang-divider">— OR —</div>
+
+      <button class="lang-btn" onclick="selectLanguage('ar')">
+        <span class="lang-flag">🇪🇬</span>
+        <div class="lang-info">
+          <span class="lang-name">العربية</span>
+          <span class="lang-sub">تحدث مع الفراعنة بالعربية</span>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: SCAN ── -->
+  <div class="screen" id="screen-scan">
     <div class="scanner-wrapper">
-      <div class="scanner-inner-title">
+      <div class="scanner-inner-title" id="scan-title">
         <i class="fa-solid fa-expand"></i>
         <span>ALIGN QR CODE TO DISCOVER</span>
       </div>
       <div id="reader"></div>
     </div>
-    
-    <div class="divider">Or Select Artifact Manually</div>
-    
+
+    <div class="divider" id="divider-text">Or Select Artifact Manually</div>
+
     <button class="exhibit-btn" onclick="loadSite('tut_mask')">
       <div class="btn-meta">
         <span>TUTANKHAMUN — Golden Mask</span>
         <span>Egyptian Museum, Cairo · Room 4</span>
       </div>
     </button>
-    
+
     <button class="exhibit-btn" onclick="loadSite('tut_statue')">
       <div class="btn-meta">
         <span>TUTANKHAMUN — Majestic Statue</span>
@@ -139,26 +180,27 @@
     </button>
   </div>
 
+  <!-- ── SCREEN 3: CHARACTER ── -->
   <div class="screen" id="screen-character">
     <button class="back-btn" onclick="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> Return to Scan
+      <i class="fa-solid fa-arrow-left"></i>
+      <span id="back-text">Return to Scan</span>
     </button>
-    
-    <div class="site-badge" id="site-badge">📍 MSR MUSEUM</div>
-    
+
+    <div class="site-badge" id="site-badge">📍 MUSEUM</div>
+
     <div class="profile-card">
       <div class="profile-flex">
         <div class="avatar-frame">
           <span id="char-avatar">𓁦</span>
         </div>
         <div class="profile-meta">
-          <h2 id="char-name">King Tutankhamun</h2>
+          <h2 id="char-name">...</h2>
           <p id="char-title">Pharaoh of the 18th Dynasty</p>
         </div>
       </div>
-      
-      <div class="interactive-speech-bubble">
-        <p id="greeting-text">Awakening the soul from eternity...</p>
+      <div class="speech-bubble">
+        <p id="greeting-text">...</p>
       </div>
     </div>
 
@@ -170,71 +212,134 @@
         <button id="send-btn" onclick="sendMessage()">
           <i class="fa-solid fa-paper-plane"></i>
         </button>
-        <div class="input-wrapper">
-          <input type="text" id="chat-input" placeholder="اسأل الملك عن أسرار حضارته..." onkeydown="if(event.key==='Enter')sendMessage()" />
-        </div>
+        <input type="text" id="chat-input" placeholder="Ask the King..." onkeydown="if(event.key==='Enter')sendMessage()" />
       </div>
     </div>
   </div>
 
   <script>
+    // ── STATE ──
     let currentLandmark = 'tut_mask';
     let currentCharacterName = '';
+    let selectedLanguage = 'en';
     let qrScannerInstance = null;
 
-    function speak(text) {
-      if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          let cleanText = "";
-          for (let char of text) {
-              let code = char.codePointAt(0);
-              if ((code < 0x13000 || code > 0x1342F) && (code < 0x1F600 || code > 0x1F64F) && (code < 0x1F300 || code > 0x1F5FF)) {
-                  cleanText += char;
-              }
-          }
-          const utterance = new SpeechSynthesisUtterance(cleanText.trim());
-          utterance.lang = 'ar-EG';
-          utterance.rate = 0.92;
-          window.speechSynthesis.speak(utterance);
+    // ── UI TEXT بناءً على اللغة ──
+    const UI_TEXT = {
+      en: {
+        scanTitle: 'ALIGN QR CODE TO DISCOVER',
+        divider: 'Or Select Artifact Manually',
+        back: 'Return to Scan',
+        placeholder: 'Ask the King anything...',
+        loading: 'Awakening from eternity...',
+        error: 'The ancient spirits are silent... please try again.',
+        chatError: 'The ancient spirits could not be reached...'
+      },
+      ar: {
+        scanTitle: 'وجّه الكاميرا نحو رمز QR',
+        divider: 'أو اختر القطعة الأثرية يدوياً',
+        back: 'العودة للمسح',
+        placeholder: 'اسأل الملك عن أي شيء...',
+        loading: 'يستيقظ من الأبدية...',
+        error: 'الأرواح القديمة صامتة... حاول مرة أخرى.',
+        chatError: 'لم نتمكن من الوصول إلى الأرواح القديمة...'
       }
+    };
+
+    // ── اختيار اللغة ──
+    function selectLanguage(lang) {
+      selectedLanguage = lang;
+
+      // تطبيق الـ RTL لو عربي
+      if (lang === 'ar') {
+        document.body.classList.add('rtl');
+      } else {
+        document.body.classList.remove('rtl');
+      }
+
+      // تحديث النصوص
+      const t = UI_TEXT[lang];
+      document.getElementById('scan-title').innerHTML = `<i class="fa-solid fa-expand"></i> <span>${t.scanTitle}</span>`;
+      document.getElementById('divider-text').textContent = t.divider;
+      document.getElementById('back-text').textContent = t.back;
+      document.getElementById('chat-input').placeholder = t.placeholder;
+
+      showScreen('screen-scan');
+      startScanner();
     }
 
+    // ── SPEAK ──
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      let cleanText = "";
+      for (let char of text) {
+        let code = char.codePointAt(0);
+        if (
+          (code < 0x13000 || code > 0x1342F) &&
+          (code < 0x1F600 || code > 0x1F64F) &&
+          (code < 0x1F300 || code > 0x1F5FF)
+        ) cleanText += char;
+      }
+      cleanText = cleanText.trim();
+      if (!cleanText) return;
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      const voices = window.speechSynthesis.getVoices();
+
+      if (selectedLanguage === 'ar') {
+        utterance.lang = 'ar-EG';
+        const arabicVoice = voices.find(v => v.lang.startsWith('ar'));
+        if (arabicVoice) utterance.voice = arabicVoice;
+        utterance.rate = 0.88;
+        utterance.pitch = 0.9;
+      } else {
+        utterance.lang = 'en-GB';
+        const georgeVoice = voices.find(v => v.name.includes('George'));
+        if (georgeVoice) utterance.voice = georgeVoice;
+        utterance.rate = 0.82;
+        utterance.pitch = 0.85;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // ── QR SCANNER ──
     async function startScanner() {
       try {
-          if (qrScannerInstance) {
-              try { await qrScannerInstance.stop(); } catch(e) {}
-          }
-          qrScannerInstance = new Html5Qrcode("reader");
-          await qrScannerInstance.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            (decodedText) => {
-              if (decodedText.trim()) {
-                qrScannerInstance.stop().then(() => {
-                  loadSite(decodedText.trim());
-                }).catch(() => {
-                  loadSite(decodedText.trim());
-                });
-              }
-            },
-            () => {}
-          );
-      } catch (err) {
-          console.log("Scanner layout stabilized.");
+        if (qrScannerInstance) {
+          try { await qrScannerInstance.stop(); } catch(e) {}
+        }
+        qrScannerInstance = new Html5Qrcode("reader");
+        await qrScannerInstance.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            if (decodedText.trim()) {
+              qrScannerInstance.stop().then(() => loadSite(decodedText.trim())).catch(() => loadSite(decodedText.trim()));
+            }
+          },
+          () => {}
+        );
+      } catch(err) {
+        console.log("Scanner ready.");
       }
     }
 
+    // ── LOAD SITE ──
     async function loadSite(landmarkId) {
       currentLandmark = landmarkId;
-      showScreen('screen-character');
+      const t = UI_TEXT[selectedLanguage];
 
-      document.getElementById('greeting-text').innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+      showScreen('screen-character');
+      document.getElementById('greeting-text').textContent = t.loading;
       document.getElementById('char-name').textContent = '...';
       document.getElementById('chat-messages').innerHTML = '';
 
       try {
-        const res = await fetch(`/chat/init?landmark=${landmarkId}`);
-        if (!res.ok) throw new Error("Artifact offline");
+        const res = await fetch(`/chat/init?landmark=${landmarkId}&lang=${selectedLanguage}`);
+        if (!res.ok) throw new Error("offline");
         const data = await res.json();
 
         currentCharacterName = data.character;
@@ -243,21 +348,24 @@
         document.getElementById('char-name').textContent = data.character;
         document.getElementById('site-badge').textContent = '📍 ' + data.current_location;
         document.getElementById('greeting-text').textContent = data.initial_message;
-        document.getElementById('chat-input').placeholder = `اسأل ${data.character} عن أي شيء...`;
+        document.getElementById('chat-input').placeholder = selectedLanguage === 'ar'
+          ? `اسأل ${data.character} عن أي شيء...`
+          : `Ask ${data.character} anything...`;
 
         document.getElementById('site-info').innerHTML = `
-          <div class="info-block"><label>Current Exhibit</label><p>${data.current_location}</p></div>
-          <div class="info-block"><label>Identity</label><p>${data.character}</p></div>
+          <div class="info-block"><label>${selectedLanguage === 'ar' ? 'المعرض الحالي' : 'Current Exhibit'}</label><p>${data.current_location}</p></div>
+          <div class="info-block"><label>${selectedLanguage === 'ar' ? 'الشخصية' : 'Character'}</label><p>${data.character}</p></div>
         `;
 
         addMessage('ai', data.initial_message);
         speak(data.initial_message);
 
       } catch(e) {
-        document.getElementById('greeting-text').textContent = 'The ancient spirits are silent... please try again.';
+        document.getElementById('greeting-text').textContent = t.error;
       }
     }
 
+    // ── SEND MESSAGE ──
     async function sendMessage() {
       const input = document.getElementById('chat-input');
       const msg = input.value.trim();
@@ -270,40 +378,41 @@
       btn.disabled = true;
 
       const typingEl = addMessage('ai', '', true);
+      const t = UI_TEXT[selectedLanguage];
 
       try {
-        const res = await fetch(`/chat/send?landmark=${currentLandmark}`, {
+        const res = await fetch(`/chat/send?landmark=${currentLandmark}&lang=${selectedLanguage}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: msg })
         });
         const data = await res.json();
-
         typingEl.querySelector('.msg-text').textContent = data.response;
         speak(data.response);
 
       } catch(e) {
-        typingEl.querySelector('.msg-text').textContent = 'The ancient spirits could not be reached...';
+        typingEl.querySelector('.msg-text').textContent = t.chatError;
       }
 
       btn.disabled = false;
       scrollChat();
     }
 
+    // ── ADD MESSAGE ──
     function addMessage(role, text, isTyping=false) {
       const box = document.getElementById('chat-messages');
       const el = document.createElement('div');
       el.className = `message ${role}`;
-      
+
       if (role === 'ai') {
         el.innerHTML = `
-          <div class="msg-speaker">${currentCharacterName || 'الملك'}</div>
+          <div class="msg-speaker">${currentCharacterName || '...'}</div>
           <div class="msg-text">${isTyping ? '<div class="loading-dots"><span></span><span></span><span></span></div>' : text}</div>
         `;
       } else {
         el.innerHTML = `<div class="msg-text">${text}</div>`;
       }
-      
+
       box.appendChild(el);
       scrollChat();
       return el;
@@ -325,9 +434,8 @@
       await startScanner();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      startScanner();
-    });
+    // تحميل الأصوات
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
   </script>
 </body>
 </html>

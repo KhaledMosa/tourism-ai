@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.routes.chat import router as chat_router
+from app.routes.scan import router as scan_router
 import os
 
 app = FastAPI(title="Egypt Tourism AI", version="1.0.0")
@@ -15,17 +16,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 1. تفعيل الـ API Routes أولاً
 app.include_router(chat_router)
+app.include_router(scan_router, prefix="/api")
 
-# 2. دالة صريحة لفتح ملف الـ HTML فوراً عند الدخول على الرابط الرئيسي
 @app.get("/")
 async def read_index():
     index_path = os.path.join("static", "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    return {"error": "مجلد static أو ملف index.html غير موجود في مسار المشروع الأساسي!"}
+    return {"error": "index.html مش موجود!"}
 
-# 3. خدمة الملفات الفرعية والأصول الثابتة داخل مجلد static
 if os.path.exists("static"):
-    app.mount("/", StaticFiles(directory="static"), name="static")
+    app.mount("/static", StaticFiles(directory="static"), name="static")
