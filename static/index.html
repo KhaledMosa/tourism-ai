@@ -1,520 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Egypt Tourism AI</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KMT AI — Egypt Tourism</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap');
 
-  *{margin:0;padding:0;box-sizing:border-box;}
+    :root {
+      --gold-dark: #8c6d23;
+      --gold-main: #c5a044;
+      --gold-light: #e5c77a;
+      --gold-glow: rgba(197, 160, 68, 0.3);
+      --bg-deep: #050302;
+      --bg-card: #0e0a07;
+      --bg-input: #140f0a;
+      --border-color: #261b0f;
+      --border-glow: #42301a;
+      --text-main: #e6dfd1;
+      --text-muted: #8c8070;
+    }
 
-  body {
-    background: #0a0705;
-    color: #e8d5a3;
-    font-family: 'Lato', sans-serif;
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at top, #1a0f00 0%, #0a0705 60%);
-  }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-deep); color: var(--text-main); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(circle at 50% -20%, #1c130b 0%, var(--bg-deep) 70%); }
+    .scan-lines { position: fixed; inset: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%; z-index: 999; pointer-events: none; opacity: 0.4; }
 
-  /* ── HEADER ── */
-  header {
-    text-align: center;
-    padding: 40px 20px 20px;
-    border-bottom: 1px solid #3d2b00;
-  }
-  header h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 2.2rem;
-    color: #c9a84c;
-    letter-spacing: 4px;
-    text-shadow: 0 0 30px #c9a84c55;
-  }
-  header p { color: #8a7355; font-size: 0.9rem; margin-top: 6px; letter-spacing: 2px; }
+    body::before { content: "𓁦 𓋹 𓇳 𓅓 𓆓 𓁴 𓉔 𓎛 𓏏 𓏤 𓌻 𓎡 𓏲 𓇾"; position: fixed; bottom: 5%; right: -5%; font-size: 12rem; color: rgba(197, 160, 68, 0.015); pointer-events: none; user-select: none; transform: rotate(-15deg); z-index: 0; width: 50%; word-break: break-all; }
 
-  /* ── SCREENS ── */
-  .screen { display: none; padding: 30px 20px; max-width: 700px; margin: 0 auto; }
-  .screen.active { display: block; }
+    header { text-align: center; padding: 50px 20px 30px; position: relative; border-bottom: 1px solid var(--border-color); background: linear-gradient(to bottom, rgba(14,10,7,0.6), transparent); }
+    header::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 150px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); }
+    .brand-logo { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 7px; color: var(--gold-main); margin-bottom: 12px; font-weight: 700; text-shadow: 0 0 10px var(--gold-glow); }
+    header h1 { font-family: 'Cinzel', serif; font-size: 2.3rem; font-weight: 900; letter-spacing: 4px; color: #fff; background: linear-gradient(180deg, #fff 30%, var(--gold-light) 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { font-size: 0.85rem; color: var(--text-muted); letter-spacing: 3px; margin-top: 8px; text-transform: uppercase; }
 
-  /* ── SCAN SCREEN ── */
-  #scan-box {
-    border: 2px solid #3d2b00;
-    border-radius: 16px;
-    overflow: hidden;
-    background: #110d06;
-    padding: 20px;
-    text-align: center;
-  }
-  #scan-box h2 {
-    font-family: 'Cinzel', serif;
-    color: #c9a84c;
-    margin-bottom: 16px;
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-  }
-  #reader { width: 100%; border-radius: 10px; overflow: hidden; }
+    .screen { display: none; padding: 25px 20px; max-width: 680px; margin: 0 auto; position: relative; z-index: 10; }
+    .screen.active { display: block; animation: fadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-  .divider {
-    text-align: center;
-    margin: 24px 0;
-    color: #3d2b00;
-    font-size: 0.8rem;
-    letter-spacing: 3px;
-  }
+    .scanner-wrapper { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; }
+    .scanner-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); }
+    .scanner-inner-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold-light); text-align: center; margin-bottom: 20px; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    #reader { width: 100%; border: 1px solid var(--border-color) !important; border-radius: 16px; overflow: hidden; background: #000; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+    #reader__dashboard, #reader__header { display: none !important; }
+    #reader video { border-radius: 16px; object-fit: cover; }
+    
+    .divider { text-align: center; margin: 35px 0; position: relative; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; }
+    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 25%; height: 1px; background: var(--border-color); }
+    .divider::before { left: 0; } .divider::after { right: 0; }
 
-  .demo-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #3d2b00, #1a1200);
-    border: 1px solid #c9a84c44;
-    border-radius: 10px;
-    color: #c9a84c;
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    cursor: pointer;
-    letter-spacing: 2px;
-    transition: all 0.3s;
-    margin-bottom: 10px;
-  }
-  .demo-btn:hover { background: linear-gradient(135deg, #5a4000, #2a1e00); border-color: #c9a84c; }
+    .exhibit-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 18px 24px; background: linear-gradient(135deg, #0e0a07 0%, #17110c 100%); border: 1px solid var(--border-color); border-radius: 16px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-bottom: 14px; position: relative; letter-spacing: 1px; }
+    .exhibit-btn::after { content: '𓋹'; font-size: 1.2rem; color: var(--text-muted); transition: all 0.3s; opacity: 0.5; }
+    .exhibit-btn:hover { border-color: var(--gold-main); background: linear-gradient(135deg, #140f0a 0%, #1f170f 100%); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(197,160,68,0.1); }
+    .exhibit-btn:hover::after { color: var(--gold-light); opacity: 1; transform: scale(1.1) rotate(15deg); }
+    .exhibit-btn .btn-meta { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .exhibit-btn .btn-meta span:first-child { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold-main); font-weight: 700; }
+    .exhibit-btn .btn-meta span:last-child { font-size: 0.75rem; color: var(--text-muted); }
 
-  /* ── CHARACTER SCREEN ── */
-  #character-screen { animation: fadeIn 0.8s ease; }
+    .back-btn { background: none; border: none; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; transition: color 0.3s; text-transform: uppercase; }
+    .back-btn:hover { color: var(--gold-light); }
+    .site-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(197, 160, 68, 0.06); border: 1px solid rgba(197, 160, 68, 0.2); padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; color: var(--gold-light); letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    
+    .profile-card { background: linear-gradient(145deg, #0f0b08 0%, #060403 100%); border: 1px solid var(--border-color); border-radius: 28px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 24px; }
+    .profile-flex { display: flex; align-items: center; gap: 24px; margin-bottom: 20px; }
+    .avatar-frame { width: 84px; height: 84px; border-radius: 50%; background: #140f0b; border: 1px solid var(--gold-dark); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 0 25px var(--gold-glow); flex-shrink: 0; }
+    .avatar-frame span { font-size: 2.4rem; line-height: 1; }
+    .profile-meta h2 { font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff; letter-spacing: 2px; }
+    .profile-meta p { font-size: 0.75rem; color: var(--gold-main); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+    
+    .interactive-speech-bubble { background: #14100b; border-radius: 20px; padding: 20px; position: relative; border: 1px solid var(--border-color); direction: rtl; }
+    .interactive-speech-bubble p { font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.7; color: #ebdcb9; font-style: italic; }
+    
+    .exhibit-info-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-block label { display: block; font-size: 0.7()rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+    .info-block p { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 0.9rem; font-weight: 600; letter-spacing: 1px; }
 
-  @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .chat-container { background: linear-gradient(180deg, #0a0705 0%, #050302 100%); border: 1px solid var(--border-color); border-radius: 24px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+    .chat-messages { height: 320px; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+    .chat-messages::-webkit-scrollbar { width: 5px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-  .site-badge {
-    display: inline-block;
-    background: #1a1200;
-    border: 1px solid #c9a84c44;
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 0.78rem;
-    color: #8a7355;
-    letter-spacing: 2px;
-    margin-bottom: 24px;
-  }
+    .message { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.6; position: relative; }
+    .message.user { background: linear-gradient(135deg, #1c140c 0%, #140e08 100%); border: 1px solid var(--border-glow); align-self: flex-end; color: var(--text-main); border-bottom-right-radius: 4px; direction: rtl; text-align: right; }
+    .message.ai { background: linear-gradient(135deg, #0e0a07 0%, #080604 100%); border: 1px solid rgba(197,160,68,0.1); align-self: flex-start; color: #ebdcb9; border-bottom-left-radius: 4px; direction: rtl; text-align: right; }
+    .message .msg-speaker { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold-main); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; }
 
-  .character-card {
-    background: linear-gradient(160deg, #1a1200 0%, #0f0900 100%);
-    border: 1px solid #c9a84c33;
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .character-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 30%, #c9a84c08 0%, transparent 60%);
-    pointer-events: none;
-  }
+    .loading-dots { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; }
+    .loading-dots span { width: 6px; height: 6px; background: var(--gold-main); border-radius: 50%; animation: dotPulse 1.4s infinite ease-in-out both; }
+    .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes dotPulse { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
-  .character-avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 2px solid #c9a84c;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.8rem;
-    background: #1a1200;
-    box-shadow: 0 0 30px #c9a84c33;
-  }
-
-  .character-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1.6rem;
-    color: #c9a84c;
-    text-align: center;
-    letter-spacing: 3px;
-    margin-bottom: 6px;
-  }
-  .character-title {
-    text-align: center;
-    color: #8a7355;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-  }
-
-  .greeting-box {
-    background: #0f0900;
-    border-left: 3px solid #c9a84c;
-    border-radius: 0 10px 10px 0;
-    padding: 16px 20px;
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #d4b87a;
-    font-style: italic;
-    min-height: 60px;
-  }
-
-  .loading-dots::after {
-    content: '...';
-    animation: dots 1.2s infinite;
-  }
-  @keyframes dots {
-    0%,20%{content:'.'} 40%,60%{content:'..'} 80%,100%{content:'...'}
-  }
-
-  /* ── SITE INFO ── */
-  .site-info {
-    background: #110d06;
-    border: 1px solid #3d2b00;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .info-item label {
-    display: block;
-    font-size: 0.7rem;
-    color: #8a7355;
-    letter-spacing: 2px;
-    margin-bottom: 4px;
-  }
-  .info-item span {
-    font-family: 'Cinzel', serif;
-    color: #c9a84c;
-    font-size: 0.9rem;
-  }
-
-  /* ── CHAT ── */
-  .chat-section h3 {
-    font-family: 'Cinzel', serif;
-    color: #c9a84c;
-    font-size: 1rem;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
-  }
-
-  #chat-messages {
-    background: #0a0705;
-    border: 1px solid #3d2b00;
-    border-radius: 14px;
-    padding: 16px;
-    height: 280px;
-    overflow-y: auto;
-    margin-bottom: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  #chat-messages::-webkit-scrollbar { width: 4px; }
-  #chat-messages::-webkit-scrollbar-track { background: #0a0705; }
-  #chat-messages::-webkit-scrollbar-thumb { background: #3d2b00; border-radius: 4px; }
-
-  .msg {
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    animation: fadeIn 0.3s ease;
-  }
-  .msg.user {
-    background: #1e1600;
-    border: 1px solid #3d2b00;
-    align-self: flex-end;
-    color: #e8d5a3;
-    border-radius: 14px 14px 4px 14px;
-  }
-  .msg.ai {
-    background: #150f00;
-    border: 1px solid #c9a84c22;
-    align-self: flex-start;
-    color: #d4b87a;
-    font-style: italic;
-    border-radius: 14px 14px 14px 4px;
-  }
-  .msg.ai .sender {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    color: #c9a84c;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-    font-style: normal;
-  }
-
-  .chat-input-row {
-    display: flex;
-    gap: 10px;
-  }
-  #chat-input {
-    flex: 1;
-    background: #110d06;
-    border: 1px solid #3d2b00;
-    border-radius: 10px;
-    padding: 12px 16px;
-    color: #e8d5a3;
-    font-family: 'Lato', sans-serif;
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  #chat-input:focus { border-color: #c9a84c55; }
-  #chat-input::placeholder { color: #3d2b00; }
-
-  #send-btn {
-    background: linear-gradient(135deg, #c9a84c, #8a6a1a);
-    border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    color: #0a0705;
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    cursor: pointer;
-    font-weight: bold;
-    transition: opacity 0.3s;
-  }
-  #send-btn:hover { opacity: 0.85; }
-  #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #8a7355;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    background: none;
-    border: none;
-    padding: 0;
-    transition: color 0.3s;
-  }
-  .back-btn:hover { color: #c9a84c; }
-
-  /* ── DECORATIVE ── */
-  .hieroglyph {
-    text-align: center;
-    font-size: 1.5rem;
-    opacity: 0.3;
-    letter-spacing: 8px;
-    margin: 10px 0;
-  }
-</style>
+    .chat-input-bar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #0e0a07; border-top: 1px solid var(--border-color); }
+    .input-wrapper { position: relative; flex: 1; }
+    #chat-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: var(--text-main); font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; outline: none; direction: rtl; text-align: right; }
+    
+    #send-btn { background: linear-gradient(135deg, var(--gold-main) 0%, var(--gold-dark) 100%); border: none; border-radius: 14px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--bg-deep); font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; }
+    #send-btn:hover { transform: scale(1.04); box-shadow: 0 0 20px var(--gold-glow); }
+    #send-btn:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>𓂀 EGYPT TOURISM AI</h1>
-  <p>SCAN · DISCOVER · EXPERIENCE</p>
-</header>
+  <div class="scan-lines"></div>
 
-<!-- SCAN SCREEN -->
-<div class="screen active" id="screen-scan">
-  <div style="padding:30px 20px;max-width:500px;margin:0 auto;">
-    <div id="scan-box">
-      <h2>𓋹 SCAN YOUR QR CODE</h2>
-      <p style="color:#8a7355;font-size:0.85rem;margin-bottom:16px;letter-spacing:1px;">Point your camera at the exhibit QR code</p>
+  <header>
+    <div class="brand-logo">𓁦 KMT METAVERSE 𓋹</div>
+    <h1>EGYPT TOURISM AI</h1>
+    <p>The Past is Listening</p>
+  </header>
+
+  <div class="screen active" id="screen-scan">
+    <div class="scanner-wrapper">
+      <div class="scanner-inner-title">
+        <i class="fa-solid fa-expand"></i>
+        <span>ALIGN QR CODE TO DISCOVER</span>
+      </div>
       <div id="reader"></div>
     </div>
-
-    <div class="divider">— OR CHOOSE AN EXHIBIT —</div>
-
-    <button class="demo-btn" onclick="loadSite('SITE003','T003')">
-      𓁦 TUTANKHAMUN — Golden Mask
+    
+    <div class="divider">Or Select Artifact Manually</div>
+    
+    <button class="exhibit-btn" onclick="loadSite('tut_mask')">
+      <div class="btn-meta">
+        <span>TUTANKHAMUN — Golden Mask</span>
+        <span>Egyptian Museum, Cairo · Room 4</span>
+      </div>
     </button>
-    <button class="demo-btn" onclick="loadSite('SITE001','T002')">
-      𓇳 GREAT PYRAMID — Giza
-    </button>
-    <button class="demo-btn" onclick="loadSite('SITE002','T002')">
-      𓊽 KARNAK TEMPLE — Luxor
+    
+    <button class="exhibit-btn" onclick="loadSite('tut_statue')">
+      <div class="btn-meta">
+        <span>TUTANKHAMUN — Majestic Statue</span>
+        <span>Grand Egyptian Museum · Main Hall</span>
+      </div>
     </button>
   </div>
-</div>
 
-<!-- CHARACTER SCREEN -->
-<div class="screen" id="screen-character">
-  <div style="max-width:700px;margin:0 auto;">
-    <button class="back-btn" onclick="goBack()">← BACK TO SCAN</button>
-
-    <div class="site-badge" id="site-badge">📍 Loading...</div>
-
-    <div class="character-card">
-      <div class="character-avatar" id="char-avatar">𓁦</div>
-      <div class="character-name" id="char-name">Loading...</div>
-      <div class="character-title" id="char-title">Ancient Egyptian Guide</div>
-      <div class="hieroglyph">𓂀 𓋹 𓊽 𓇳</div>
-      <div class="greeting-box" id="greeting-text">
-        <span class="loading-dots">Awakening from eternity</span>
+  <div class="screen" id="screen-character">
+    <button class="back-btn" onclick="goBack()">
+      <i class="fa-solid fa-arrow-left"></i> Return to Scan
+    </button>
+    
+    <div class="site-badge" id="site-badge">📍 MSR MUSEUM</div>
+    
+    <div class="profile-card">
+      <div class="profile-flex">
+        <div class="avatar-frame">
+          <span id="char-avatar">𓁦</span>
+        </div>
+        <div class="profile-meta">
+          <h2 id="char-name">King Tutankhamun</h2>
+          <p id="char-title">Pharaoh of the 18th Dynasty</p>
+        </div>
+      </div>
+      
+      <div class="interactive-speech-bubble">
+        <p id="greeting-text">Awakening the soul from eternity...</p>
       </div>
     </div>
 
-    <div class="site-info" id="site-info"></div>
+    <div class="exhibit-info-panel" id="site-info"></div>
 
-    <div class="chat-section">
-      <h3>𓂋 ASK THE ANCIENTS</h3>
-      <div id="chat-messages"></div>
-      <div class="chat-input-row">
-        <input id="chat-input" type="text" placeholder="Ask Tutankhamun anything..." onkeydown="if(event.key==='Enter')sendMessage()"/>
-        <button id="send-btn" onclick="sendMessage()">SEND</button>
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-bar">
+        <button id="send-btn" onclick="sendMessage()">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+        <div class="input-wrapper">
+          <input type="text" id="chat-input" placeholder="اسأل الملك عن أسرار حضارته..." onkeydown="if(event.key==='Enter')sendMessage()" />
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  // ── STATE ──
-  let currentTouristId = 'T003';
-  let currentSiteId = 'SITE003';
-  let currentCharacter = '';
-  let chatHistory = [];
-  let qrScanner = null;
+  <script>
+    let currentLandmark = 'tut_mask';
+    let currentCharacterName = '';
+    let qrScannerInstance = null;
 
-  // ── CHARACTER CONFIG ──
-  const CHARACTERS = {
-    'Tutankhamun': { emoji: '𓁦', title: 'The Boy King — 18th Dynasty' },
-    'Thoth':       { emoji: '𓅃', title: 'God of Wisdom & Writing' },
-    'Nefertari':   { emoji: '𓁹', title: 'Beloved Queen of Ramesses II' },
-  };
-
-  // ── QR SCANNER ──
-  function startScanner() {
-    qrScanner = new Html5Qrcode("reader");
-    qrScanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText) => {
-        // QR format: "TOURIST_ID:SITE_ID"  e.g. "T003:SITE003"
-        const parts = decodedText.split(':');
-        if (parts.length === 2) {
-          qrScanner.stop();
-          loadSite(parts[1], parts[0]);
-        }
-      },
-      () => {}
-    ).catch(() => {});
-  }
-
-  // ── LOAD SITE ──
-  async function loadSite(siteId, touristId) {
-    currentSiteId = siteId;
-    currentTouristId = touristId;
-    chatHistory = [];
-
-    showScreen('screen-character');
-
-    document.getElementById('greeting-text').innerHTML = '<span class="loading-dots">Awakening from eternity</span>';
-    document.getElementById('char-name').textContent = '...';
-    document.getElementById('chat-messages').innerHTML = '';
-
-    try {
-      const res = await fetch(`/api/scan/${touristId}/${siteId}`);
-      const data = await res.json();
-
-      currentCharacter = data.character;
-      const cfg = CHARACTERS[currentCharacter] || { emoji: '𓂀', title: 'Ancient Egyptian Guide' };
-
-      document.getElementById('char-avatar').textContent = cfg.emoji;
-      document.getElementById('char-name').textContent = currentCharacter.toUpperCase();
-      document.getElementById('char-title').textContent = cfg.title;
-      document.getElementById('site-badge').textContent = '📍 ' + data.site.name;
-      document.getElementById('greeting-text').textContent = data.ai_greeting;
-      document.getElementById('chat-input').placeholder = `Ask ${currentCharacter} anything...`;
-
-      document.getElementById('site-info').innerHTML = `
-        <div class="info-item"><label>LOCATION</label><span>${data.site.location}</span></div>
-        <div class="info-item"><label>ERA</label><span>${data.site.era}</span></div>
-        <div class="info-item"><label>CHARACTER</label><span>${data.character}</span></div>
-        <div class="info-item"><label>VISITOR</label><span>${data.tourist.name}</span></div>
-      `;
-
-      addMessage('ai', data.ai_greeting);
-
-    } catch(e) {
-      document.getElementById('greeting-text').textContent = 'The spirits are silent... please try again.';
-    }
-  }
-
-  // ── CHAT ──
-  async function sendMessage() {
-    const input = document.getElementById('chat-input');
-    const msg = input.value.trim();
-    if (!msg) return;
-
-    input.value = '';
-    addMessage('user', msg);
-    chatHistory.push({ role: 'user', content: msg });
-
-    const btn = document.getElementById('send-btn');
-    btn.disabled = true;
-    btn.textContent = '...';
-
-    const typingEl = addMessage('ai', '...', true);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tourist_id: currentTouristId,
-          site_id: currentSiteId,
-          message: msg,
-          history: chatHistory
-        })
-      });
-      const data = await res.json();
-
-      typingEl.querySelector('.msg-text').textContent = data.reply;
-      chatHistory.push({ role: 'assistant', content: data.reply });
-
-    } catch(e) {
-      typingEl.querySelector('.msg-text').textContent = 'The ancient spirits could not be reached...';
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          let cleanText = "";
+          for (let char of text) {
+              let code = char.codePointAt(0);
+              if ((code < 0x13000 || code > 0x1342F) && (code < 0x1F600 || code > 0x1F64F) && (code < 0x1F300 || code > 0x1F5FF)) {
+                  cleanText += char;
+              }
+          }
+          const utterance = new SpeechSynthesisUtterance(cleanText.trim());
+          utterance.lang = 'ar-EG';
+          utterance.rate = 0.92;
+          window.speechSynthesis.speak(utterance);
+      }
     }
 
-    btn.disabled = false;
-    btn.textContent = 'SEND';
-    scrollChat();
-  }
-
-  function addMessage(role, text, isTyping=false) {
-    const box = document.getElementById('chat-messages');
-    const el = document.createElement('div');
-    el.className = `msg ${role}`;
-    if (role === 'ai') {
-      el.innerHTML = `<div class="sender">${currentCharacter || 'GUIDE'}</div><div class="msg-text">${isTyping ? '<span class="loading-dots"></span>' : text}</div>`;
-    } else {
-      el.innerHTML = `<div class="msg-text">${text}</div>`;
+    async function startScanner() {
+      try {
+          if (qrScannerInstance) {
+              try { await qrScannerInstance.stop(); } catch(e) {}
+          }
+          qrScannerInstance = new Html5Qrcode("reader");
+          await qrScannerInstance.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            (decodedText) => {
+              if (decodedText.trim()) {
+                qrScannerInstance.stop().then(() => {
+                  loadSite(decodedText.trim());
+                }).catch(() => {
+                  loadSite(decodedText.trim());
+                });
+              }
+            },
+            () => {}
+          );
+      } catch (err) {
+          console.log("Scanner layout stabilized.");
+      }
     }
-    box.appendChild(el);
-    scrollChat();
-    return el;
-  }
 
-  function scrollChat() {
-    const box = document.getElementById('chat-messages');
-    box.scrollTop = box.scrollHeight;
-  }
+    async function loadSite(landmarkId) {
+      currentLandmark = landmarkId;
+      showScreen('screen-character');
 
-  // ── NAVIGATION ──
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
+      document.getElementById('greeting-text').innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+      document.getElementById('char-name').textContent = '...';
+      document.getElementById('chat-messages').innerHTML = '';
 
-  function goBack() {
-    showScreen('screen-scan');
-    chatHistory = [];
-  }
+      try {
+        const res = await fetch(`/chat/init?landmark=${landmarkId}`);
+        if (!res.ok) throw new Error("Artifact offline");
+        const data = await res.json();
 
-  // ── INIT ──
-  startScanner();
-</script>
+        currentCharacterName = data.character;
+
+        document.getElementById('char-avatar').textContent = landmarkId === 'tut_mask' ? '𓁦' : '𓇳';
+        document.getElementById('char-name').textContent = data.character;
+        document.getElementById('site-badge').textContent = '📍 ' + data.current_location;
+        document.getElementById('greeting-text').textContent = data.initial_message;
+        document.getElementById('chat-input').placeholder = `اسأل ${data.character} عن أي شيء...`;
+
+        document.getElementById('site-info').innerHTML = `
+          <div class="info-block"><label>Current Exhibit</label><p>${data.current_location}</p></div>
+          <div class="info-block"><label>Identity</label><p>${data.character}</p></div>
+        `;
+
+        addMessage('ai', data.initial_message);
+        speak(data.initial_message);
+
+      } catch(e) {
+        document.getElementById('greeting-text').textContent = 'The ancient spirits are silent... please try again.';
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      input.value = '';
+      addMessage('user', msg);
+
+      const btn = document.getElementById('send-btn');
+      btn.disabled = true;
+
+      const typingEl = addMessage('ai', '', true);
+
+      try {
+        const res = await fetch(`/chat/send?landmark=${currentLandmark}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+
+        typingEl.querySelector('.msg-text').textContent = data.response;
+        speak(data.response);
+
+      } catch(e) {
+        typingEl.querySelector('.msg-text').textContent = 'The ancient spirits could not be reached...';
+      }
+
+      btn.disabled = false;
+      scrollChat();
+    }
+
+    function addMessage(role, text, isTyping=false) {
+      const box = document.getElementById('chat-messages');
+      const el = document.createElement('div');
+      el.className = `message ${role}`;
+      
+      if (role === 'ai') {
+        el.innerHTML = `
+          <div class="msg-speaker">${currentCharacterName || 'الملك'}</div>
+          <div class="msg-text">${isTyping ? '<div class="loading-dots"><span></span><span></span><span></span></div>' : text}</div>
+        `;
+      } else {
+        el.innerHTML = `<div class="msg-text">${text}</div>`;
+      }
+      
+      box.appendChild(el);
+      scrollChat();
+      return el;
+    }
+
+    function scrollChat() {
+      const box = document.getElementById('chat-messages');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    async function goBack() {
+      showScreen('screen-scan');
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      await startScanner();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      startScanner();
+    });
+  </script>
 </body>
 </html>
